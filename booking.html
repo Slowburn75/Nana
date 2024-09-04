@@ -225,7 +225,7 @@
             <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html">Home</a>
+                        <a class="nav-link" href="homepage.html">Home</a>
                     </li>
     
                     <li class="nav-item">
@@ -239,7 +239,7 @@
 						<ul class="navbar-nav ml-auto">
 							<li class="nav-item dropdown">
 								<a class="nav-link dropdown-toggle" href="#" id="navbar Dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<i class="fa fa-user" aria-hidden="true"></i> Nana</a>
+									<i class="fa fa-user" aria-hidden="true"></i> </a>
 									<!-- <a class="dropdown-item" href="">Profile</a>
 									<div class="dropdown-divider"></div>
 									<a class="dropdown-item" href="login.html">Log Out</a> -->
@@ -319,7 +319,7 @@
 
                 </form>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" style="display: flex; justify-content: center; align-items: center;">
 
               <!-- <div id="ticket"> -->
                   <div class="boarding-pass">
@@ -457,71 +457,71 @@
     </div>      
     
   
-    <div id="history" class="text-center" style="padding-top: 30px;">
-        <h3>Booking History</h3>
-
-        <ul id="historyList"></ul>
-    </div><br><br>
 
     <script>
-        let currentBalance = 50000; // Starting balance
-
-        document.getElementById('busBookingForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            // Get form values
-            const from = document.getElementById('from').value;
-            const to = document.getElementById('to').value;
-            const bus = document.getElementById('bus').value;
-            const route = document.getElementById('route').value;
-            const seats = parseInt(document.getElementById('seat').value);
-            const date = document.getElementById('date').value;
-
-            // Prices per bus type
-            const prices = {
-                'standard': 200,
-                'luxury': 400,
-                'vip': 600
-            };
-
-            const pricePerSeat = prices[bus];
-            const totalAmount = pricePerSeat * seats;
-
-            // Check if balance is sufficient
-            if (currentBalance >= totalAmount) {
-                // Deduct from balance
-                currentBalance -= totalAmount;
-                document.getElementById('balance').textContent = currentBalance;
-
-                // Populate the ticket
-                document.getElementById('ticket-from').textContent = from;
-                document.getElementById('ticket-to').textContent = to;
-                document.getElementById('ticket-bus').textContent = bus;
-                document.getElementById('ticket-route').textContent = route;
-                document.getElementById('ticket-seats').textContent = seats;
-                document.getElementById('ticket-date').textContent = date;
-                document.getElementById('ticket-amount').textContent = totalAmount;
-
-                // Add to booking history
-                addToHistory(from, to, bus, route, seats, date, totalAmount);
-            } else {
-
-                alert('Insufficient balance!');
-            }
-        });
-
-        function addToHistory(from, to, bus, route, seats, date, totalAmount) {
-            const historyList = document.getElementById('historyList');
-            const listItem = document.createElement('li');
-            listItem.textContent = `From: ${from}, To: ${to}, Bus: ${bus}, Route: ${route}, Seats: ${seats}, Date: ${date}, Amount: ₦${totalAmount}`;
-            historyList.appendChild(listItem);
-        }
-
-        // Clear history on page load
-        window.onload = function() {
-            document.getElementById('historyList').innerHTML = '';
-            document.getElementById('balance').textContent = currentBalance;
-        };
-    </script>
+      document.getElementById('busBookingForm').addEventListener('submit', function(e) {
+          e.preventDefault();
+  
+          // Get form values
+          const from = document.getElementById('from').value;
+          const to = document.getElementById('to').value;
+          const bus = document.getElementById('bus').value;
+          const route = document.getElementById('route').value;
+          const seats = parseInt(document.getElementById('seat').value);
+          const date = document.getElementById('date').value;
+  
+          // Prices per bus type
+          const prices = {
+              'standard': 200,
+              'luxury': 400,
+              'vip': 600
+          };
+  
+          const pricePerSeat = prices[bus];
+          const totalAmount = pricePerSeat * seats;
+  
+          // Check if balance is sufficient
+          let currentBalance = parseInt(document.getElementById('balance').textContent);
+          if (currentBalance >= totalAmount) {
+              // Deduct from balance
+              currentBalance -= totalAmount;
+              document.getElementById('balance').textContent = currentBalance;
+  
+              // Create ticket data
+              const ticket = {
+                  from,
+                  to,
+                  bus,
+                  route,
+                  seats,
+                  date,
+                  totalAmount
+              };
+  
+              // Update the UI with the ticket details
+              document.getElementById('ticket-from').textContent = from;
+              document.getElementById('ticket-to').textContent = to;
+              document.getElementById('ticket-bus').textContent = bus;
+              document.getElementById('ticket-route').textContent = route;
+              document.getElementById('ticket-seats').textContent = seats;
+              document.getElementById('ticket-date').textContent = date;
+              document.getElementById('ticket-amount').textContent = `₦${totalAmount}`;
+  
+              // Save ticket data to localStorage
+              let ticketHistory = JSON.parse(localStorage.getItem('ticketHistory')) || [];
+              ticketHistory.push(ticket);
+              localStorage.setItem('ticketHistory', JSON.stringify(ticketHistory));
+  
+              // Debugging log
+              console.log("Ticket stored: ", ticket);
+              console.log("Current ticket history: ", ticketHistory);
+  
+              alert('Ticket booked successfully!');
+          } else {
+              alert('Insufficient balance!');
+          }
+      });
+  </script>
+  
 </body>
 </html>
